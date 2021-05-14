@@ -57,13 +57,15 @@ public class CELLTcpClient : MonoBehaviour
     [DllImport("CppNet100")]
     public static extern int CELLClient_SendData(IntPtr cppClientObj, byte[] data, int len);
 
+    [DllImport("CppNet100")]
+    public static extern int CELLClient_SendWriteStream(IntPtr cppClientObj, IntPtr cppStreamObj);
 
     public void Creat()
     {
         _handle = GCHandle.Alloc(this);
         _thisObj = GCHandle.ToIntPtr(_handle);
 
-        _cppClientObj = CELLClient_Create(_thisObj, DellOnNetMsgCallBack, 1024, 1024);
+        _cppClientObj = CELLClient_Create(_thisObj, DellOnNetMsgCallBack, 10240, 10240);
     }
 
     public bool Connect(string ip, UInt16 port)
@@ -100,14 +102,24 @@ public class CELLTcpClient : MonoBehaviour
     }
 
     // 发送数据
-    public int SendData(byte[] data, int len)
+    public int SendData(CELLSendStream stream)
     {
         if (_cppClientObj == IntPtr.Zero)
         {
             return 0;
         }
 
-        return CELLClient_SendData(_cppClientObj, data, len);
+        return CELLClient_SendData(_cppClientObj, stream.Data, stream.DataSize);
+    }
+
+    public int SendData(CELLWriteStream stream)
+    {
+        if (_cppClientObj == IntPtr.Zero)
+        {
+            return 0;
+        }
+
+        return CELLClient_SendWriteStream(_cppClientObj, stream.Data);
     }
 
     // 解析接受的数据

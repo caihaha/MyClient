@@ -41,7 +41,7 @@ public class NewBehaviourScript : CELLTcpClient
         int []b = { 1, 2, 3, 4, 5 };
         stream.WriteInts(b);
         stream.Finsh();
-        SendData(stream.DataArray, stream.ByteList.Count);
+        SendData(stream);
     }
 
     // Update is called once per frame
@@ -57,7 +57,7 @@ public class NewBehaviourScript : CELLTcpClient
 
     public override void OnNetMsgBytes(IntPtr data, int len)
     {
-        CELLReadStream stream = new CELLReadStream(data, len);
+        CELLRecvStream stream = new CELLRecvStream(data, len);
 
         stream.ReadInt16();
         //读取消息命令
