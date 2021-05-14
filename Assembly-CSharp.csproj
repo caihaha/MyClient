@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CELLSendStream.cs" />
     <Compile Include="Assets\CELLTcpClient.cs" />
     <Compile Include="Assets\NewBehaviourScript.cs" />
     <Reference Include="UnityEngine">

@@ -28,6 +28,20 @@ public class NewBehaviourScript : CELLTcpClient
     {
         Creat();
         Connect(_ip, _port);
+
+        CELLSendStream stream = new CELLSendStream();
+        stream.SetNetCMD(CMD.CMD_LOGOUT);
+        stream.WriteInt8(1);
+        stream.WriteInt16(2);
+        stream.WriteInt32(3);
+        stream.WriteFloat(4.5f);
+        stream.WriteDouble(6.7);
+        stream.WriteString("client");
+        stream.WriteString("ahah");
+        int []b = { 1, 2, 3, 4, 5 };
+        stream.WriteInts(b);
+        stream.Finsh();
+        SendData(stream.DataArray, stream.ByteList.Count);
     }
 
     // Update is called once per frame
@@ -39,5 +53,10 @@ public class NewBehaviourScript : CELLTcpClient
     void OnDestroy()
     {
         Close();
+    }
+
+    public override void OnNetMsgBytes(byte[] data)
+    {
+
     }
 }

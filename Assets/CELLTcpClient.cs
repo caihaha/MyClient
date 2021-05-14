@@ -5,6 +5,18 @@ using System.Runtime.InteropServices;
 using System;
 using AOT;
 
+public enum CMD
+{
+    CMD_LOGIN = 10,
+    CMD_LOGIN_RESULT,
+    CMD_LOGOUT,
+    CMD_LOGOUT_RESULT,
+    CMD_NEW_USER_JOIN,
+    CMD_C2S_HEART,
+    CMD_S2C_HEART,
+    CMD_ERROR
+};
+
 public class CELLTcpClient : MonoBehaviour
 {
     public CELLTcpClient()
@@ -21,6 +33,16 @@ public class CELLTcpClient : MonoBehaviour
     public void DellOnNetMsgCallBack(IntPtr csObj, IntPtr data, int len)
     {
         Debug.Log(len);
+        GCHandle h = GCHandle.FromIntPtr(csObj);
+        CELLTcpClient obj = h.Target as CELLTcpClient;
+        if(obj == null)
+        {
+            return;
+        }
+
+        byte[] buffer = new byte[len];
+        Marshal.Copy(data, buffer, 0, len);
+        obj.OnNetMsgBytes(buffer);
     }
 
     [DllImport("CppNet100")]
@@ -77,6 +99,7 @@ public class CELLTcpClient : MonoBehaviour
         CELLClient_Close(_cppClientObj);
     }
 
+    // 发送数据
     public int SendData(byte[] data, int len)
     {
         if (_cppClientObj == IntPtr.Zero)
@@ -85,5 +108,11 @@ public class CELLTcpClient : MonoBehaviour
         }
 
         return CELLClient_SendData(_cppClientObj, data, len);
+    }
+
+    // 解析接受的数据
+    public virtual void OnNetMsgBytes(byte[] data)
+    {
+
     }
 }
