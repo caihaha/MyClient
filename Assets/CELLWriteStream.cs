@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System;
 using System.Text;
 
-public class CELLSendStream
+public class CELLWriteStream
 {
-    List<byte> byteList;
+    List<byte> _byteList;
 
-    public List<byte> ByteList => byteList;
+    public List<byte> ByteList => _byteList;
 
-    public CELLSendStream(int nSize = 128)
+    public CELLWriteStream(int nSize = 128)
     {
-        byteList = new List<byte>(nSize);
+        _byteList = new List<byte>(nSize);
     }
 
     public byte[] DataArray 
     { 
         get 
         {
-            return byteList.ToArray();
+            return _byteList.ToArray();
         } 
     }
 
@@ -26,7 +26,7 @@ public class CELLSendStream
     {
         get
         {
-            return byteList.Count;
+            return _byteList.Count;
         }
     }
 
@@ -37,12 +37,12 @@ public class CELLSendStream
 
     public void Write(byte[] data)
     {
-        byteList.AddRange(data);
+        _byteList.AddRange(data);
     }
 
     public void WriteInt8(sbyte n)
     {
-        byteList.Add((byte)n);
+        _byteList.Add((byte)n);
     }
 
     public void WriteInt16(Int16 n)
@@ -62,7 +62,7 @@ public class CELLSendStream
 
     public void WriteUInt8(byte n)
     {
-        byteList.Add(n);
+        _byteList.Add(n);
     }
 
     public void WriteUInt16(UInt16 n)
@@ -115,8 +115,8 @@ public class CELLSendStream
 
     public void Finsh()
     {
-        UInt16 len = (UInt16)byteList.Count;
+        UInt16 len = (UInt16)_byteList.Count;
         len += 2;
-        byteList.InsertRange(0, BitConverter.GetBytes(len));
+        _byteList.InsertRange(0, BitConverter.GetBytes(len));
     }
 }

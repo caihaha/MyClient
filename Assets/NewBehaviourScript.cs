@@ -29,7 +29,7 @@ public class NewBehaviourScript : CELLTcpClient
         Creat();
         Connect(_ip, _port);
 
-        CELLSendStream stream = new CELLSendStream();
+        CELLWriteStream stream = new CELLWriteStream();
         stream.SetNetCMD(CMD.CMD_LOGOUT);
         stream.WriteInt8(1);
         stream.WriteInt16(2);
@@ -55,8 +55,20 @@ public class NewBehaviourScript : CELLTcpClient
         Close();
     }
 
-    public override void OnNetMsgBytes(byte[] data)
+    public override void OnNetMsgBytes(IntPtr data, int len)
     {
+        CELLReadStream stream = new CELLReadStream(data, len);
 
+        stream.ReadInt16();
+        //读取消息命令
+        stream.GetNetCmd();
+        var n1 = stream.ReadInt8();
+        var n2 = stream.ReadInt16();
+        var n3 = stream.ReadInt32();
+        var n4 = stream.ReadFloat();
+        var n5 = stream.ReadDouble();
+        var name = stream.ReadString();
+        var pw = stream.ReadString();
+        var ata = stream.ReadInts();
     }
 }

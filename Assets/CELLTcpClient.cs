@@ -39,10 +39,7 @@ public class CELLTcpClient : MonoBehaviour
         {
             return;
         }
-
-        byte[] buffer = new byte[len];
-        Marshal.Copy(data, buffer, 0, len);
-        obj.OnNetMsgBytes(buffer);
+        obj.OnNetMsgBytes(data, len);
     }
 
     [DllImport("CppNet100")]
@@ -97,6 +94,9 @@ public class CELLTcpClient : MonoBehaviour
         }
 
         CELLClient_Close(_cppClientObj);
+        _cppClientObj = IntPtr.Zero;
+        _thisObj = IntPtr.Zero;
+        _handle.Free();
     }
 
     // 发送数据
@@ -111,7 +111,7 @@ public class CELLTcpClient : MonoBehaviour
     }
 
     // 解析接受的数据
-    public virtual void OnNetMsgBytes(byte[] data)
+    public virtual void OnNetMsgBytes(IntPtr data, int len)
     {
 
     }
