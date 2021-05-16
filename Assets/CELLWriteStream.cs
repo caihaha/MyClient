@@ -157,4 +157,9 @@ public class CELLWriteStream
     public void Finsh()
     {
     }
+	
+	public bool Release()
+	{
+		CELLWriteStream_Release(_cppStreamObj);
+	}
 }
