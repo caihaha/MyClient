@@ -52,7 +52,7 @@ public class CELLReadStream
 
     public CELLReadStream(IntPtr data, int len)
     {
-        CELLReadStream_Create(_cppStreamObj);
+        _cppStreamObj = CELLReadStream_Create(data, len);
     }
 
     public UInt16 GetNetCmd()
@@ -119,38 +119,26 @@ public class CELLReadStream
 		}
 		
 		return Encoding.UTF8.GetString(buffer, 0, len);
-		// string s = "";
-		// Int32 len = (Int32)OnlyReadUInt32();
-		// StringBuilder sb = new StringBuilder(len);
-		// CELLReadStream_ReadString(_cppStreamObj, sb, len);
-        // return sb.ToString();
     }
 	
-	public string Release()
+	public void Release()
     {
-        return CELLReadStream_Release(_cppStreamObj);
+        CELLReadStream_Release(_cppStreamObj);
     }
 	
-	public string OnlyReadUInt32()
+	public UInt32 OnlyReadUInt32()
     {
-        return CELLReadStream_OnlyReadUInt32(_cppStreamObj)
+        return CELLReadStream_OnlyReadUInt32(_cppStreamObj);
     }
 
     public Int32[] ReadInts()
     {
-        Int32 len = 0;
-        if (CanRead(sizeof(Int32)))
-        {
-            len = BitConverter.ToInt32(_buffer, _lastPos);
-        }
+        Int32 len = ReadInt32();
         Int32[] data = new Int32[len];
-        if (CanRead(len * sizeof(Int32)) && len > 0)
+
+        for(int i = 0; i < len; ++i)
         {
-            Pop(sizeof(Int32));
-            for(int i = 0; i < len; ++i)
-            {
-                data[i] = ReadInt32();
-            }
+            data[i] = ReadInt32();
         }
 
         return data;

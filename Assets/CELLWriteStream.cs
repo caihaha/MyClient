@@ -160,6 +160,6 @@ public class CELLWriteStream
 	
 	public bool Release()
 	{
-		CELLWriteStream_Release(_cppStreamObj);
+		return CELLWriteStream_Release(_cppStreamObj);
 	}
 }
